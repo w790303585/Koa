@@ -6,5 +6,5 @@ app.use(async (ctx) => {
 });
 
 app.listen(3000, () => {
-    console.log('Server started on port 3000');
+    console.log('Test Server started on port 3000');
 });
