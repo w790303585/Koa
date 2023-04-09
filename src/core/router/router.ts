@@ -1,17 +1,18 @@
 export * from '../../modules';
 
+import Koa from 'koa';
+import Router from 'koa-router';
 import { controllers } from '../decorators/decorator';
 /**
  * 初始化路由
  */
-export default (app, router) => {
+export default (app: Koa<Koa.DefaultState, Koa.DefaultContext>, router: Router<any, {}>) => {
     controllers.forEach((item) => {
-        // 获取每个路由的前缀
         const prefix = item.constructor.prefix;
         let url = item.url;
-        if (prefix) url = `${prefix}${url}`; // 组合真正链接
-        console.log('registe api: ', item.method, url); // 打印请求的路由method,url
-        router[item.method](url, ...item.middleware, item.handler); // 创建路由
+        if (prefix) url = `/${prefix}/${url}`;
+        console.log('registe api: ', item.method, url);
+        router[item.method](url, ...item.middleware, item.handler);
     });
     app.use(router.routes()).use(router.allowedMethods()) // 路由装箱
 }

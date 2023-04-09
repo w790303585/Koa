@@ -12,12 +12,9 @@ enum RequestMethod {
 
 function RequestMapping({ url = "", method = "", middleware = [] }): MethodDecorator {
     return function (target, name, descriptor) {
-        let path: string;
-        // 判断有没有定义url
-        url ? path = url : path = `/${name as string}`;
         // 创建router需要的数据 url，method，middleware（可以没有）,最终执行的方法，装饰器队对象的构造函数
         const item = {
-            url: path,
+            url: url.replace(/^\/+|\/+$/g, ''),
             method: method,
             middleware: middleware,
             handler: target[name],
@@ -40,12 +37,11 @@ export const controllers: {
 
 /**
  * 给controller添加装饰
- * @param {*} path
  */
-export function Controller(path: any = ''): ClassDecorator {
+export function Controller(path: string = ''): ClassDecorator {
     return (target) => {
         // 给controller类添加路由前缀
-        (target as any).prefix = path;
+        (target as any).prefix = path.replace(/^\/+|\/+$/g, '');
     }
 }
 
